@@ -1,6 +1,6 @@
     
 </section>
-<section class="page-section">
+<section class="page-section mt-5">
     <div class="container">
     <div class="w-250 justify-content-between d-flex">
         <h4><b>Booked Packages</b></h4>

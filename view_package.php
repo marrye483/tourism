@@ -96,13 +96,34 @@ if(is_dir(base_app.'uploads/package_'.$id)){
         </div>
     </div>
 </section>
+
+<!-- Paystack Script -->
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
 <script>
-    $(function(){
-        $('#book').click(function(){
-            if("<?php echo $_settings->userdata('id') ?>" > 0)
-                uni_modal("Book Info","book_form.php?package_id=<?php echo $id ?>");
-            else
-                uni_modal("","login.php","large");
+  function makePaystackPayment(){
+    const paystack = new  PaystackPop();
+
+    paystack.newTransaction({
+      key: "Your Public Key Here",
+      username:  "{{}}",
+      amount: "{{booking.total}} *  1000",
+
+      onSuccess:  (transaction) => {
+        console.log(transaction);
+        window.location.href = "/success/{{booking.booking_id}}/?success_id={{booking.success_id}}&booking_total={{booking.total}}";
+      },
+
+      onCancel: () => {
+        Swal.fire ({
+          title : "Payment Cancelled",
+          icon: "error",
         })
+      }
+
+
+
     })
+
+  }
 </script>

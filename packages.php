@@ -1,5 +1,5 @@
 <section class="page-section bg-dark" id="home">
-	<div class="container">
+	<div class="container mt-4">
 		<h2 class="text-center">Tour Packages</h2>
 	<div class="d-flex w-100 justify-content-center">
 		<hr class="border-warning" style="border:3px solid" width="15%">

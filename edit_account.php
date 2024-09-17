@@ -1,4 +1,4 @@
-<section class="page-section">
+<section class="page-section mt-5">
     <div class="container">
     <div class="w-100 justify-content-between d-flex">
         <h4><b>Update Account Details</b></h4>
