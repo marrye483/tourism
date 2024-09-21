@@ -1,12 +1,12 @@
 <?php 
 if(isset($_GET['id'])){
-    $packages = $conn->query("SELECT * FROM `packages` where md5(id) = '{$_GET['id']}'");
+    $packages = $conn->query("SELECT * FROM packages where md5(id) = '{$_GET['id']}'");
     if($packages->num_rows > 0){
         foreach($packages->fetch_assoc() as $k => $v){
             $$k = $v;
         }
     }
-$review = $conn->query("SELECT r.*,concat(firstname,' ',lastname) as name FROM `rate_review` r inner join users u on r.user_id = u.id where r.package_id='{$id}' order by unix_timestamp(r.date_created) desc ");
+$review = $conn->query("SELECT r.*,concat(firstname,' ',lastname) as name FROM rate_review r inner join users u on r.user_id = u.id where r.package_id='{$id}' order by unix_timestamp(r.date_created) desc ");
 $review_count =$review->num_rows;
 $rate = 0;
 $feed = array();
@@ -96,34 +96,13 @@ if(is_dir(base_app.'uploads/package_'.$id)){
         </div>
     </div>
 </section>
-
-<!-- Paystack Script -->
-<script src="https://js.paystack.co/v1/inline.js"></script>
-
 <script>
-  function makePaystackPayment(){
-    const paystack = new  PaystackPop();
-
-    paystack.newTransaction({
-      key: "Your Public Key Here",
-      username:  "{{}}",
-      amount: "{{booking.total}} *  1000",
-
-      onSuccess:  (transaction) => {
-        console.log(transaction);
-        window.location.href = "/success/{{booking.booking_id}}/?success_id={{booking.success_id}}&booking_total={{booking.total}}";
-      },
-
-      onCancel: () => {
-        Swal.fire ({
-          title : "Payment Cancelled",
-          icon: "error",
+    $(function(){
+        $('#book').click(function(){
+            if("<?php echo $_settings->userdata('id') ?>" > 0)
+                uni_modal("Book Info","book_form.php?package_id=<?php echo $id ?>");
+            else
+                uni_modal("","login.php","large");
         })
-      }
-
-
-
     })
-
-  }
 </script>

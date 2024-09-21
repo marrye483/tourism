@@ -48,7 +48,9 @@
       <div class="modal-body">
       </div>
       <div class="modal-footer">
+        <a href="booking_form.php?package_id=<?php echo $id ?>" id="book" class="btn">
         <button type="button" class="btn btn-primary" id='submit' onclick="$('#uni_modal form').submit()">Save</button>
+      </a>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
       </div>
       </div>

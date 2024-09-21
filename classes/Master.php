@@ -17,30 +17,30 @@ Class Master extends DBConnection {
 		foreach($_POST as $k =>$v){
 			if(!in_array($k,array('id','description'))){
 				if(!empty($data)) $data .=",";
-				$data .= " `{$k}`='{$v}' ";
+				$data .= " {$k}='{$v}' ";
 			}
 		}
 		if(isset($_POST['description'])){
 			if(!empty($data)) $data .=",";
-				$data .= " `description`='".addslashes(htmlentities($description))."' ";
+				$data .= " description='".addslashes(htmlentities($description))."' ";
 		}
 		if(empty($id)){
-			$sql = "INSERT INTO `packages` set {$data} ";
+			$sql = "INSERT INTO packages set {$data} ";
 			$save = $this->conn->query($sql);
 			$id = $this->conn->insert_id;
 		}else{
-			$sql = "UPDATE `packages` set {$data} where id = '{$id}' ";
+			$sql = "UPDATE packages set {$data} where id = '{$id}' ";
 			$save = $this->conn->query($sql);
 		}
 		if($save){
 			if(isset($_FILES['img']) && count($_FILES['img']['tmp_name']) > 0){
 				if(!is_dir(base_app.'uploads/package_'.$id)){
 					mkdir(base_app.'uploads/package_'.$id);
-					$data = " `upload_path`= 'uploads/package_{$id}' ";
+					$data = " upload_path= 'uploads/package_{$id}' ";
 				}else{
-					$data = " `upload_path`= 'uploads/package_{$id}' ";
+					$data = " upload_path= 'uploads/package_{$id}' ";
 				}
-				$this->conn->query("UPDATE `packages` set {$data} where id = '{$id}' ");
+				$this->conn->query("UPDATE packages set {$data} where id = '{$id}' ");
 				foreach($_FILES['img']['tmp_name'] as $k =>$v){
 					move_uploaded_file($_FILES['img']['tmp_name'][$k],base_app.'uploads/package_'.$id.'/'.$_FILES['img']['name'][$k]);
 				}
@@ -72,7 +72,7 @@ Class Master extends DBConnection {
 	}
 	function delete_package(){
 		extract($_POST);
-		$del = $this->conn->query("DELETE FROM `packages` where id = '{$id}'");
+		$del = $this->conn->query("DELETE FROM packages where id = '{$id}'");
 		if($del){
 			$resp['status'] = 'success';
 			if(is_dir(base_app.'uploads/package_'.$id)){
@@ -96,9 +96,9 @@ Class Master extends DBConnection {
 		extract($_POST);
 		$data = " user_id = '".$this->settings->userdata('id')."' ";
 		foreach($_POST as $k =>$v){
-			$data .= ", `{$k}` = '{$v}' ";
+			$data .= ", {$k} = '{$v}' ";
 		}
-		$save = $this->conn->query("INSERT INTO `book_list` set $data");
+		$save = $this->conn->query("INSERT INTO book_list set $data");
 		if($save){
 			$resp['status'] = 'success';
 		}else{
@@ -109,7 +109,7 @@ Class Master extends DBConnection {
 	}
 	function update_book_status(){
 		extract($_POST);
-		$update = $this->conn->query("UPDATE `book_list` set `status` = '{$status}' where id ='{$id}' ");
+		$update = $this->conn->query("UPDATE book_list set status = '{$status}' where id ='{$id}' ");
 		if($update){
 			$resp['status'] = 'success';
 			$this->settings->set_flashdata('success',"Book successfully updated.");
@@ -125,16 +125,16 @@ Class Master extends DBConnection {
 		$_POST['password'] = md5($password);
 		foreach($_POST as $k =>$v){
 				if(!empty($data)) $data .=",";
-					$data .= " `{$k}`='{$v}' ";
+					$data .= " {$k}='{$v}' ";
 		}
-		$check = $this->conn->query("SELECT * FROM `users` where username='{$username}' ")->num_rows;
+		$check = $this->conn->query("SELECT * FROM users where username='{$username}' ")->num_rows;
 		if($check > 0){
 			$resp['status'] = 'failed';
 			$resp['msg'] = "Username already taken.";
 			return json_encode($resp);
 			exit;
 		}
-		$save = $this->conn->query("INSERT INTO `users` set $data ");
+		$save = $this->conn->query("INSERT INTO users set $data ");
 		if($save){
 			foreach($_POST as $k =>$v){
 				$this->settings->set_userdata($k,$v);
@@ -161,7 +161,7 @@ Class Master extends DBConnection {
 			}
 
 		}
-		$check = $this->conn->query("SELECT * FROM `users`  where `username`='{$username}' and `id` != $id ")->num_rows;
+		$check = $this->conn->query("SELECT * FROM users  where username='{$username}' and id != $id ")->num_rows;
 		if($check > 0){
 			$resp['status'] = 'failed';
 			$resp['msg'] = "Username already taken.";
@@ -172,9 +172,9 @@ Class Master extends DBConnection {
 			if($k == 'cpassword' || ($k == 'password' && empty($v)))
 				continue;
 				if(!empty($data)) $data .=",";
-					$data .= " `{$k}`='{$v}' ";
+					$data .= " {$k}='{$v}' ";
 		}
-		$save = $this->conn->query("UPDATE `users` set $data where id = $id ");
+		$save = $this->conn->query("UPDATE users set $data where id = $id ");
 		if($save){
 			foreach($_POST as $k =>$v){
 				if($k != 'cpassword')
@@ -196,9 +196,9 @@ Class Master extends DBConnection {
 		$data = "";
 		foreach($_POST as $k =>$v){
 				if(!empty($data)) $data .=",";
-					$data .= " `{$k}`='{$v}' ";
+					$data .= " {$k}='{$v}' ";
 		}
-		$save = $this->conn->query("INSERT INTO `inquiry` set $data");
+		$save = $this->conn->query("INSERT INTO inquiry set $data");
 		if($save){
 			$resp['status'] = 'success';
 		}else{
@@ -215,11 +215,11 @@ Class Master extends DBConnection {
 			if($k=='review')
 			$v = addslashes(htmlentities($v));
 				if(!empty($data)) $data .=",";
-					$data .= " `{$k}`='{$v}' ";
+					$data .= " {$k}='{$v}' ";
 		}
-		$data .= ", `user_id`='".$this->settings->userdata('id')."' ";
+		$data .= ", user_id='".$this->settings->userdata('id')."' ";
 
-		$save = $this->conn->query("INSERT INTO `rate_review` set $data");
+		$save = $this->conn->query("INSERT INTO rate_review set $data");
 		if($save){
 			$resp['status'] = 'success';
 			// $this->settings->set_flashdata("success","Rate & Review submitted.");
@@ -231,7 +231,7 @@ Class Master extends DBConnection {
 
 	}
 	function delete_inquiry(){
-		$del = $this->conn->query("DELETE FROM `inquiry` where id='{$_POST['id']}'");
+		$del = $this->conn->query("DELETE FROM inquiry where id='{$_POST['id']}'");
 		if($del){
 			$resp['status'] = 'success';
 			$this->settings->set_flashdata("success","Inquiry Deleted.");
@@ -242,7 +242,7 @@ Class Master extends DBConnection {
 		return json_encode($resp);
 	}
 	function delete_review(){
-		$del = $this->conn->query("DELETE FROM `rate_review` where id='{$_POST['id']}'");
+		$del = $this->conn->query("DELETE FROM rate_review where id='{$_POST['id']}'");
 		if($del){
 			$resp['status'] = 'success';
 			$this->settings->set_flashdata("success","Feedback Deleted.");
@@ -253,7 +253,7 @@ Class Master extends DBConnection {
 		return json_encode($resp);
 	}
 	function delete_booking(){
-		$del = $this->conn->query("DELETE FROM `book_list` where id='{$_POST['id']}'");
+		$del = $this->conn->query("DELETE FROM book_list where id='{$_POST['id']}'");
 		if($del){
 			$resp['status'] = 'success';
 			$this->settings->set_flashdata("success","Booking Deleted.");
